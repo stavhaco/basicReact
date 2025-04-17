@@ -4,23 +4,21 @@ from sqlalchemy.orm import Session
 from typing import List
 import json
 from datetime import datetime
-import os
 
-from . import models, schemas, database
-from .database import engine, get_db
+import models
+import schemas
+import database
+from database import engine, get_db
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="List Management API")
 
-# Get allowed origins from environment variable or use default
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
-
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=["http://localhost:3000"],  # React app will run on port 3000
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
