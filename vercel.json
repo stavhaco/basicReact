@@ -5,21 +5,23 @@
       "src": "backend/main.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb"
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
       }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "backend/main.py"
+      "dest": "/backend/main.py"
     },
     {
       "src": "/(.*)",
-      "dest": "backend/main.py"
+      "dest": "/backend/main.py"
     }
   ],
   "env": {
-    "PYTHONPATH": "."
+    "PYTHONPATH": ".",
+    "PYTHONUNBUFFERED": "1"
   }
 } 
