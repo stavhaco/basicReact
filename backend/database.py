@@ -6,9 +6,10 @@ from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from .env file
 load_dotenv()
-
+print("Loading environment variables...")
+print(os.getenv("DATABASE_URL"))
 # Use the Supabase connection string for local testing
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:ebs_robot_123@db.cujqcuhurociiniooooi.supabase.co:5432/postgres")
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 # Ensure the URL scheme is correct
 DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
