@@ -3,14 +3,14 @@
   "buildCommand": "pip install -r requirements.txt",
   "builds": [
     {
-      "src": "backend/main.py",
+      "src": "main.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "backend/main.py"
+      "dest": "main.py"
     }
   ]
 } 
