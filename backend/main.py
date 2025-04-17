@@ -6,10 +6,8 @@ import json
 from datetime import datetime
 import os
 
-import models
-import schemas
-import database
-from database import engine, get_db
+from . import models, schemas, database
+from .database import engine, get_db
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
