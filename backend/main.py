@@ -18,7 +18,7 @@ app = FastAPI(title="List Management API")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React app will run on port 3000
+    allow_origins=["http://localhost:3000", "https://basic-react-backend-6x7zgbqit-stavhacos-projects.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,24 +47,32 @@ async def broadcast_update(element: dict):
 
 @app.post("/api/elements/", response_model=schemas.ListElement)
 async def create_element(element: schemas.ListElementCreate, db: Session = Depends(get_db)):
-    db_element = models.ListElement(**element.dict())
-    db.add(db_element)
-    db.commit()
-    db.refresh(db_element)
-    
-    # Broadcast the new element to all connected clients
-    await broadcast_update({
-        "type": "new_element",
-        "data": {
-            "id": db_element.id,
-            "first_name": db_element.first_name,
-            "last_name": db_element.last_name,
-            "country": db_element.country,
-            "created_at": db_element.created_at.isoformat()
-        }
-    })
-    
-    return db_element
+    print("Received element data:", element.dict())
+    try:
+        db_element = models.ListElement(**element.dict())
+        print("Created DB element:", db_element.__dict__)
+        db.add(db_element)
+        db.commit()
+        db.refresh(db_element)
+        print("Saved element to database:", db_element.__dict__)
+        
+        # Broadcast the new element to all connected clients
+        await broadcast_update({
+            "type": "new_element",
+            "data": {
+                "id": db_element.id,
+                "first_name": db_element.first_name,
+                "last_name": db_element.last_name,
+                "country": db_element.country,
+                "created_at": db_element.created_at.isoformat()
+            }
+        })
+        
+        return db_element
+    except Exception as e:
+        print("Error creating element:", str(e))
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/elements/", response_model=List[schemas.ListElement])
 def get_elements(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
