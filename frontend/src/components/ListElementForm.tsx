@@ -33,11 +33,14 @@ const ListElementForm: React.FC<ListElementFormProps> = ({ onElementAdded }) => 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Submitting form with data:', formData);
     setLoading(true);
     setError(null);
 
     try {
+      console.log('Calling createElement API...');
       const newElement = await createElement(formData);
+      console.log('API Response:', newElement);
       onElementAdded(newElement);
       setFormData({
         first_name: '',
@@ -45,8 +48,8 @@ const ListElementForm: React.FC<ListElementFormProps> = ({ onElementAdded }) => 
         country: ''
       });
     } catch (err) {
+      console.error('Error in form submission:', err);
       setError('Failed to add element');
-      console.error(err);
     } finally {
       setLoading(false);
     }

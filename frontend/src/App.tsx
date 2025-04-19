@@ -24,12 +24,16 @@ function App() {
 
   useEffect(() => {
     const loadElements = async () => {
+      console.log('Starting to load elements...');
       try {
         const data = await fetchElements();
-        setElements(data);
+        console.log('Received data from API:', data);
+        console.log('Data type:', typeof data);
+        console.log('Is Array?', Array.isArray(data));
+        setElements(Array.isArray(data) ? data : []);
       } catch (err) {
+        console.error('Error in loadElements:', err);
         setError('Failed to load elements');
-        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -41,6 +45,10 @@ function App() {
   const handleNewElement = (element: ListElement) => {
     setElements(prevElements => [element, ...prevElements]);
   };
+
+  console.log('Current elements state:', elements);
+  console.log('Current loading state:', loading);
+  console.log('Current error state:', error);
 
   return (
     <ThemeProvider theme={theme}>
